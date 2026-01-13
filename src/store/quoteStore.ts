@@ -9,7 +9,6 @@ interface QuoteState {
     includePallet: boolean;
     shippingCost: number;
     includePastina: boolean;
-
     pastinaQuantity: number;
 
     poolType: PoolType;
@@ -20,12 +19,13 @@ interface QuoteState {
     selectedColor: string;
     includeInstallation: boolean;
     installationType: 'existing' | 'new_slab';
+    installationUnit: 'ml' | 'm2';
 
     // Actions
     setClientInfo: (info: Partial<Pick<QuoteState, 'clientName' | 'clientPhone' | 'clientAddress' | 'transportName' | 'includePallet' | 'shippingCost' | 'includePastina' | 'pastinaQuantity'>>) => void;
     setPoolConfig: (config: Partial<Pick<QuoteState, 'poolType' | 'dimensions' | 'hasArc' | 'arcSide' | 'selectedColor'>>) => void;
     setSolarium: (config: Partial<SolariumConfig>) => void;
-    setInstallationConfig: (config: Partial<Pick<QuoteState, 'includeInstallation' | 'installationType'>>) => void;
+    setInstallationConfig: (config: Partial<Pick<QuoteState, 'includeInstallation' | 'installationType' | 'installationUnit'>>) => void;
 
     currentQuote: QuoteResult | null;
     setQuoteResult: (result: QuoteResult) => void;
@@ -40,9 +40,8 @@ export const useQuoteStore = create<QuoteState>((set) => ({
     transportName: '',
     includePallet: false,
     shippingCost: 0,
-    includePastina: true, // Default to true or false? Let's say false initially or user choice. User didn't specify default. Let's go with false.
+    includePastina: false,
     pastinaQuantity: 1,
-
 
     poolType: 'concrete',
     dimensions: { length: 0, width: 0 },
@@ -52,6 +51,7 @@ export const useQuoteStore = create<QuoteState>((set) => ({
     selectedColor: 'Beige',
     includeInstallation: false,
     installationType: 'existing',
+    installationUnit: 'ml',
 
     currentQuote: null,
 
@@ -78,6 +78,7 @@ export const useQuoteStore = create<QuoteState>((set) => ({
         selectedColor: 'Beige',
         includeInstallation: false,
         installationType: 'existing',
+        installationUnit: 'ml',
         currentQuote: null,
     }),
 

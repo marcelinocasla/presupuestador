@@ -18,20 +18,23 @@ import {
     Trash2,
     Edit3,
     Plus,
-    X
+    X,
+    Menu
 } from 'lucide-react';
 import { PriceList, CompanyInfo } from '@/types';
 import AdminSidebar from '@/components/AdminSidebar';
 import QuotePage from '@/app/page';
 
 export default function AdminPage() {
-    const { prices, companyInfo, updatePrices, updateCompanyInfo } = useAdminStore();
+    const { prices, companyInfo, updatePrices, updateCompanyInfo, fetchData } = useAdminStore();
     const [activeTab, setActiveTab] = useState('overview');
     const [isClient, setIsClient] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
-    }, []);
+        fetchData();
+    }, [fetchData]);
 
     if (!isClient) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-500 font-medium tracking-widest uppercase text-xs">Cargando Nano Banana Panel...</div>;
 
@@ -43,19 +46,32 @@ export default function AdminPage() {
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/5 rounded-full blur-[120px] mix-blend-screen animate-pulse duration-[15s]"></div>
             </div>
 
-            <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+            <AdminSidebar
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                isOpen={sidebarOpen}
+                onClose={() => setSidebarOpen(false)}
+            />
 
             <main className="flex-1 p-8 overflow-y-auto relative z-10 custom-scrollbar">
-                <header className="mb-10 flex justify-between items-center">
-                    <div>
-                        <h1 className="text-4xl font-black tracking-tighter text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                            {activeTab === 'overview' && 'Vista General'}
-                            {activeTab === 'builder' && 'Cotizador Profesional'}
-                            {activeTab === 'catalog' && 'Catálogo & Precios'}
-                            {activeTab === 'history' && 'Historial de Operaciones'}
-                            {activeTab === 'settings' && 'Configuración Global'}
-                        </h1>
-                        <p className="text-slate-500 text-sm font-medium tracking-wide">Panel de Control Administrativo • v2.0</p>
+                <header className="mb-10 flex justify-between items-center bg-slate-950/50 p-4 rounded-3xl lg:bg-transparent lg:p-0">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setSidebarOpen(true)}
+                            className="p-2 bg-slate-900 border border-slate-800 rounded-xl lg:hidden text-slate-400 hover:text-white"
+                        >
+                            <Menu className="w-6 h-6" />
+                        </button>
+                        <div>
+                            <h1 className="text-4xl font-black tracking-tighter text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                                {activeTab === 'overview' && 'Vista General'}
+                                {activeTab === 'builder' && 'Cotizador Profesional'}
+                                {activeTab === 'catalog' && 'Catálogo & Precios'}
+                                {activeTab === 'history' && 'Historial de Operaciones'}
+                                {activeTab === 'settings' && 'Configuración Global'}
+                            </h1>
+                            <p className="text-slate-500 text-sm font-medium tracking-wide">Panel de Control Administrativo • v2.0</p>
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-4">

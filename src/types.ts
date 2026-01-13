@@ -29,6 +29,8 @@ export type PriceList = {
   deckL: ProductDetails;
   pastina: ProductDetails;
   pallet: ProductDetails;
+  installationScenarioA: ProductDetails;
+  installationScenarioB: ProductDetails;
 };
 
 export type CompanyInfo = {
@@ -98,5 +100,6 @@ export type HistoryEntry = {
     pastinaQuantity: number;
     includeInstallation: boolean;
     installationType: InstallationType;
+    installationUnit: 'ml' | 'm2';
   };
 };

@@ -8,7 +8,8 @@ import {
     Package,
     History,
     Settings,
-    LogOut
+    LogOut,
+    X
 } from 'lucide-react';
 
 interface SidebarItemProps {
@@ -22,8 +23,8 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }: SidebarItemProps) =
     <button
         onClick={onClick}
         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden ${active
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
+            : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
     >
         {active && <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/20"></div>}
@@ -36,9 +37,11 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }: SidebarItemProps) =
 interface AdminSidebarProps {
     activeTab: string;
     setActiveTab: (tab: string) => void;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
-export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
+export default function AdminSidebar({ activeTab, setActiveTab, isOpen, onClose }: AdminSidebarProps) {
     const navItems = [
         { id: 'overview', label: 'Vista General', icon: LayoutDashboard },
         { id: 'builder', label: 'Cotizador', icon: Calculator },
@@ -48,55 +51,77 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
     ];
 
     return (
-        <aside className="w-72 h-screen sticky top-0 bg-slate-950 border-r border-slate-800/50 flex flex-col p-6 z-50 shadow-2xl shadow-blue-900/5">
-            {/* Logo */}
-            <div className="flex items-center gap-4 mb-10 px-2 group">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform duration-300">
-                    AC
-                </div>
-                <div>
-                    <h2 className="text-white font-bold tracking-tight text-lg leading-tight">Admin<span className="text-blue-500">Pro</span></h2>
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest group-hover:text-blue-400 transition-colors">Atérmicos Celina</p>
-                </div>
-            </div>
+        <>
+            {/* Mobile Overlay */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[60] lg:hidden"
+                    onClick={onClose}
+                />
+            )}
 
-            {/* Navigation */}
-            <nav className="flex-1 space-y-2">
-                {navItems.map((item) => (
-                    <SidebarItem
-                        key={item.id}
-                        icon={item.icon}
-                        label={item.label}
-                        active={activeTab === item.id}
-                        onClick={() => setActiveTab(item.id)}
-                    />
-                ))}
-            </nav>
+            <aside className={`fixed lg:sticky top-0 left-0 h-screen bg-slate-950 border-r border-slate-800/50 flex flex-col p-6 z-[70] shadow-2xl transition-transform duration-300 w-72 ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+                }`}>
+                {/* Close button mobile */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-6 right-6 p-2 bg-slate-900 border border-slate-800 rounded-xl lg:hidden text-slate-400"
+                >
+                    <X className="w-5 h-5" />
+                </button>
 
-            {/* User / Footer */}
-            <div className="pt-6 border-t border-slate-800/50 space-y-4">
-                <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/50 border border-slate-800/50 hover:border-slate-700 transition-colors cursor-pointer">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-500 p-[1px]">
-                        <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-xs text-white font-bold">
-                            AD
+                {/* Logo */}
+                <div className="flex items-center gap-4 mb-10 px-2 group">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform duration-300">
+                        AC
+                    </div>
+                    <div>
+                        <h2 className="text-white font-bold tracking-tight text-lg leading-tight">Admin<span className="text-blue-500">Pro</span></h2>
+                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest group-hover:text-blue-400 transition-colors">Atérmicos Celina</p>
+                    </div>
+                </div>
+
+                {/* Navigation */}
+                <nav className="flex-1 space-y-2">
+                    {navItems.map((item) => (
+                        <SidebarItem
+                            key={item.id}
+                            icon={item.icon}
+                            label={item.label}
+                            active={activeTab === item.id}
+                            onClick={() => {
+                                setActiveTab(item.id);
+                                if (window.innerWidth < 1024) onClose();
+                            }}
+                        />
+                    ))}
+                </nav>
+
+                {/* User / Footer */}
+                <div className="pt-6 border-t border-slate-800/50 space-y-4">
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/50 border border-slate-800/50 hover:border-slate-700 transition-colors cursor-pointer">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-500 p-[1px]">
+                            <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-xs text-white font-bold">
+                                AD
+                            </div>
+                        </div>
+                        <div className="overflow-hidden">
+                            <p className="text-sm font-bold text-white truncate">Administrador</p>
+                            <p className="text-[10px] text-emerald-500 font-medium flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> En línea
+                            </p>
                         </div>
                     </div>
-                    <div className="overflow-hidden">
-                        <p className="text-sm font-bold text-white truncate">Administrador</p>
-                        <p className="text-[10px] text-emerald-500 font-medium flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> En línea
-                        </p>
-                    </div>
-                </div>
 
-                <Link
-                    href="/"
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:text-white hover:bg-red-500/10 hover:border-red-500/20 border border-transparent transition-all group"
-                >
-                    <LogOut className="w-4 h-4 rotate-180 group-hover:text-red-400 transition-colors" />
-                    <span className="font-medium text-xs uppercase tracking-wider group-hover:text-red-400 transition-colors">Cerrar Sesión</span>
-                </Link>
-            </div>
-        </aside>
+                    <Link
+                        href="/"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:text-white hover:bg-red-500/10 hover:border-red-500/20 border border-transparent transition-all group"
+                    >
+                        <LogOut className="w-4 h-4 rotate-180 group-hover:text-red-400 transition-colors" />
+                        <span className="font-medium text-xs uppercase tracking-wider group-hover:text-red-400 transition-colors">Cerrar Sesión</span>
+                    </Link>
+                </div>
+            </aside>
+        </>
     );
 }
