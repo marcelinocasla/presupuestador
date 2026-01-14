@@ -163,10 +163,10 @@ function calculateInstallation(
         const varillasPerimetro = Math.ceil((metrosLineales * 2) / 12); // 2 varillas por todo el perímetro, barras de 12m
 
         result.materials.items = [
-            { name: "Cemento (50kg)", quantity: Math.ceil(totalMaterialArea * 1), unit: "bolsas" },
-            { name: "Arena", quantity: (totalMaterialArea * 0.1).toFixed(2), unit: "m³" },
-            { name: "Piedra", quantity: (totalMaterialArea * 0.1).toFixed(2), unit: "m³" },
-            { name: "Malla Sima 4.2 (5x2)", quantity: Math.ceil(totalMaterialArea / 10), unit: "un" },
+            { name: "Cemento (50kg)", quantity: Math.ceil(metrosLineales * 0.3), unit: "bolsas" },
+            { name: "Arena", quantity: (metrosLineales * 0.05).toFixed(2), unit: "m³" },
+            { name: "Piedra", quantity: (metrosLineales * 0.05).toFixed(2), unit: "m³" },
+            { name: "Malla Sima 4.2 (5x2)", quantity: Math.ceil(metrosLineales / 20), unit: "un" },
             { name: "Varillas del 6", quantity: Math.max(1, varillasPerimetro), unit: "un" }
         ];
     }
